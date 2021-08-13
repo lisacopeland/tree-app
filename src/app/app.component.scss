@@ -1,0 +1,61 @@
+.leaf {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.branch {
+  font-weight: bold;
+}
+
+.details {
+  margin-left: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 10px;
+  line-height: 18px;
+  color: #999;
+}
+
+span.tag {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 3px 5px;
+  height: 18px;
+  color: #fff;
+  font-size: 8px;
+  line-height: 1;
+  text-transform: uppercase;
+
+  border-radius: 4px;
+}
+span.new {
+  background-color: green;
+}
+
+span.label {
+  background-color: #666;
+  cursor: pointer;
+}
+
+span.context {
+  background-color: #999;
+  cursor: pointer;
+
+  &.accounts {
+    background-color: blue;
+  }
+  &.data {
+    background-color: teal;
+  }
+  &.vg {
+    background-color: purple;
+  }
+  &.vr {
+    background-color: orange;
+  }
+  &.packages {
+    background-color: turquoise;
+  }
+}
