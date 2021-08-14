@@ -2,31 +2,81 @@
 <h5>Upload files here to share with team members</h5>
 
 <h5>Select one or more files and right-click to open the context menu</h5>
+<h5>
+  Enter a search value to search by name, or click on the tags to filter by tag
+</h5>
 
-<p-tree [value]="treeNodes"
+<button
+  class="context"
+  [ngClass]="context"
+  *ngIf="context"
+  pButton
+  type="button"
+  (click)="clearContext()"
+>
+  {{ context }}<i class="pi pi-check"></i>
+</button>
+
+<button
+  class="status"
+  [ngClass]="status"
+  *ngIf="status"
+  pButton
+  type="button"
+  (click)="clearStatus()"
+>
+  {{ status }}<i class="pi pi-check"></i>
+</button>
+
+<p-tree
+  [value]="treeNodes"
   [draggableNodes]="true"
   [droppableNodes]="true"
   draggableScope="self"
   droppableScope="self"
   selectionMode="checkbox"
+  [filter]="true"
   [contextMenu]="cm"
-  [(selection)]="selectedFiles">
+  (onNodeSelect)="nodeSelect($event)"
+  (onNodeUnselect)="nodeUnselect($event)"
+  [(selection)]="selectedFiles"
+>
   <!-- Used for the nodes that are files -->
+  <ng-template pTemplate="empty">
+    <div
+      style="
+        padding: 2em;
+        font-size: 2em;
+        color: #ddd;
+        text-align: center;
+        font-style: oblique;
+      "
+    >
+      <p>No files.</p>
+      <p>Drop files here to upload.</p>
+    </div>
+  </ng-template>
   <ng-template let-node pTemplate="file">
     <div class="leaf">
-      <p>{{node.label}}</p>
+      <p>{{ node.label }}</p>
       <div class="details">
-        <p>{{node.data.date}}</p>
-        <span *ngIf="node.data.status === 'new'" class="tag new">New</span>
-        <span
-          *ngIf="node.data.label"
-          class="tag label"
-          >{{ node.data.label }}</span
-        >
+        <p>{{ node.data.date }}</p>
+<!--         <span *ngIf="node.data.status === 'new'"
+          class="tag new">New</span> -->
+        <span *ngIf="node.data.status" class="tag status"
+            [ngClass]="node.data.status"
+            (click)="filterStatus(node.data.status)"
+            >{{
+            node.data.status
+          }}</span>
+        <span *ngIf="node.data.label" class="tag label">{{
+          node.data.label
+        }}</span>
         <span
           *ngIf="node.data.context"
           class="tag context"
           [ngClass]="node.data.context"
+          (click)="filterContext(node.data.context)"
           >{{ node.data.context }}</span
         >
       </div>
@@ -34,9 +84,11 @@
   </ng-template>
   <!-- Used for the nodes that are branches -->
   <ng-template let-node pTemplate="default">
-    <p class="branch">{{node.label}}</p>
+    <p class="branch">{{ node.label }}</p>
   </ng-template>
 </p-tree>
-
+<div button-row>
+  <button class="expand-button" pButton (click)="expandToggle(true)">Expand all<i class="pi pi-folder-open"></i></button>
+  <button class="expand-button" pButton (click)="expandToggle(false)">Collapse all<i class="pi pi-folder"></i></button>
+</div>
 <p-contextMenu #cm [model]="menuItems"></p-contextMenu>
-

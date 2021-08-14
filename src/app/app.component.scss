@@ -39,6 +39,65 @@ span.label {
   cursor: pointer;
 }
 
+.button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-content: center;
+}
+
+.expand-button {
+  font-size: .75em;
+  margin: 10px;
+  height: 20px;
+  outline: none;
+  border: none;
+  color: grey;
+  i {
+    margin-left: 10px;
+  }
+}
+
+button.context {
+  background-color: #999;
+  outline: none;
+  border: 1px solid blue;
+  border-radius: 5%;
+  cursor: pointer;
+  height: 25px;
+  margin-bottom: 20px;
+  &.accounts {
+    background-color: blue;
+    color: white;
+  }
+  &.data {
+    background-color: teal;
+  }
+  &.vg {
+    background-color: purple;
+  }
+  &.vr {
+    background-color: orange;
+  }
+  &.packages {
+    background-color: turquoise;
+  }
+}
+
+span.status {
+  background-color: #999;
+  cursor: pointer;
+  &.new {
+    background-color: green;
+  }
+  &.downloaded {
+    background-color: brown;
+  }
+  &.archived {
+    background-color: red;
+  }
+}
+
 span.context {
   background-color: #999;
   cursor: pointer;
@@ -58,4 +117,5 @@ span.context {
   &.packages {
     background-color: turquoise;
   }
+
 }

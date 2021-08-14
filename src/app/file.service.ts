@@ -103,9 +103,16 @@ export class FileService {
     return of(this.files);
   }
 
-  convertFilestoNodes(files: File[]): MyTreeNode {
+  convertFilestoNodes(roughfiles: File[], contextFilter = ''): MyTreeNode {
     // toplevel is 'account/'
     // a whole folder will look like 'account/level/sublevel'
+    const files = roughfiles.filter((file) => {
+      if (contextFilter && file.context !== contextFilter) {
+        return false;
+      } else {
+        return true;
+      }
+    });
     const root = new MyTreeNode('account', '/account', null, false);
     files.forEach(file => {
       const pathSegments: string[] = file.folder.split('/');
