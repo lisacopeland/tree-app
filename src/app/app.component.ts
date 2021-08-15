@@ -12,7 +12,6 @@ import { MyTreeNode, File } from './files.api';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'tree-app';
-  myNodes: MyTreeNode[];
   files: File[] = [];
   treeNodes: TreeNode[];
   selectedFiles: TreeNode[];
@@ -101,9 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.files,
         this.context
       );
-      this.myNodes = [rootNode];
-      console.log(this.myNodes);
-      this.treeNodes = this.fileService.convertMyNodes(this.myNodes);
+      this.treeNodes = [rootNode];
     } else {
       this.treeNodes = [];
     }

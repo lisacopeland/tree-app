@@ -60,14 +60,14 @@
     <div class="leaf">
       <p>{{ node.label }}</p>
       <div class="details">
-        <p>{{ node.data.date }}</p>
+        <p>{{ node.data.created_at }}</p>
 <!--         <span *ngIf="node.data.status === 'new'"
           class="tag new">New</span> -->
-        <span *ngIf="node.data.status" class="tag status"
-            [ngClass]="node.data.status"
-            (click)="filterStatus(node.data.status)"
+        <span *ngIf="node.data.admin_status" class="tag status"
+            [ngClass]="node.data.admin_status"
+            (click)="filterStatus(node.data.admin_status)"
             >{{
-            node.data.status
+            node.data.admin_status
           }}</span>
         <span *ngIf="node.data.label" class="tag label">{{
           node.data.label

@@ -1,16 +1,24 @@
-export class MyTreeNode {
+import * as moment from "moment";
+import { TreeNode } from "primeng/api";
+
+export class MyTreeNode implements TreeNode<File> {
   label: string;
   path: string;
-  data: File | null;
+  data?: File;
   leaf: boolean;
+  type: string;
   children: MyTreeNode[];
 
-  constructor(label: string, path: string, file: File | null, leaf: boolean = false) {
+  constructor(label: string, path: string, file?: File, leaf: boolean = false) {
     this.label = label;
     this.path = path;
     this.data = file;
     this.leaf = leaf;
+    this.type = (leaf) ? "file" : ""
     this.children = [];
+    if (leaf && this.data !== undefined) {
+      this.data.created_at = moment(this.data.created_at).format('MM/DD hh:mm a')
+    }
   }
 
   getOrCreateBranch(branchName: string, path: string): MyTreeNode {
@@ -19,7 +27,7 @@ export class MyTreeNode {
     if (child !== undefined) {
       return child;
     } else {
-      const newNode = new MyTreeNode(branchName, path, null, false)
+      const newNode = new MyTreeNode(branchName, path, undefined, false)
       this.children.push(newNode);
       return newNode;
     }

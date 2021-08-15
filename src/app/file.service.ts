@@ -113,7 +113,7 @@ export class FileService {
         return true;
       }
     });
-    const root = new MyTreeNode('account', '/account', null, false);
+    const root = new MyTreeNode('account', '/account', undefined, false);
     files.forEach(file => {
       const pathSegments: string[] = file.folder.split('/');
       let branch = root;
@@ -143,8 +143,8 @@ export class FileService {
     return retNodes;
   }
 
-  convertData(file:File | null) {
-    if (file !== null) {
+  convertData(file:File | undefined) {
+    if (file !== undefined) {
       return {
         id: file.id,
         name: file.name,
@@ -157,7 +157,7 @@ export class FileService {
         file,
       }
     } else {
-      return null
+      return undefined
     }
   }
 }
