@@ -103,13 +103,15 @@ export class FileService {
     return of(this.files);
   }
 
-  convertFilestoNodes(roughfiles: File[], contextFilter = ''): MyTreeNode {
+  convertFilestoNodes(roughfiles: File[], contextFilter = '', statusFilter = ''): MyTreeNode {
     // toplevel is 'account/'
     // a whole folder will look like 'account/level/sublevel'
     const files = roughfiles.filter((file) => {
       if (contextFilter && file.context !== contextFilter) {
         return false;
-      } else {
+      } else if (statusFilter && file.admin_status !== statusFilter)
+        return false;
+      else {
         return true;
       }
     });
@@ -130,7 +132,7 @@ export class FileService {
     return root;
   }
 
-  convertMyNodes(myNodes: MyTreeNode[]): TreeNode[] {
+/*   convertMyNodes(myNodes: MyTreeNode[]): TreeNode[] {
     const retNodes: TreeNode[] = [];
     myNodes.forEach(myNode => {
       retNodes.push({
@@ -159,5 +161,5 @@ export class FileService {
     } else {
       return undefined
     }
-  }
+  } */
 }

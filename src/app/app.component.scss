@@ -60,8 +60,10 @@ span.label {
 
 button.context {
   background-color: #999;
+  color: white;
+  margin-right: 10px;
   outline: none;
-  border: 1px solid blue;
+  border: none;
   border-radius: 5%;
   cursor: pointer;
   height: 25px;
@@ -81,6 +83,27 @@ button.context {
   }
   &.packages {
     background-color: turquoise;
+  }
+}
+
+button.status {
+  background-color: #999;
+  color: white;
+  margin-right: 10px;
+  outline: none;
+  border: none;
+  border-radius: 5%;
+  cursor: pointer;
+  height: 25px;
+  margin-bottom: 20px;
+  &.new {
+    background-color: green;
+  }
+  &.downloaded {
+    background-color: brown;
+  }
+  &.archived {
+    background-color: red;
   }
 }
 

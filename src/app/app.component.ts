@@ -14,6 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'tree-app';
   files: File[] = [];
   treeNodes: TreeNode[];
+  unFilteredNodes: TreeNode[];
   selectedFiles: TreeNode[];
   sub: Subscription;
   status = '';
@@ -46,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.fileService.getFiles().subscribe((files) => {
       this.files = files;
-      this.updateRows();
+      this.createTree();
     });
   }
 
@@ -59,52 +60,38 @@ export class AppComponent implements OnInit, OnDestroy {
 
   filterContext(context: string) {
     this.context = context;
-    this.filterRows();
+    this.createTree();
+    this.expandToggle(true);
   }
 
   clearContext() {
     this.context = '';
-    this.filterRows();
+    this.createTree();
   }
 
   filterStatus(status: string) {
     this.status = status;
-    this.filterRows();
+    this.createTree();
+    this.expandToggle(true);
   }
 
   clearStatus() {
     this.status = '';
-    this.filterRows();
+    this.createTree();
   }
 
-  filterRows() {
-    const filteredNodes = this.treeNodes.filter(x => {
-      if (!x.leaf) {
-        return true;
-      }
-      if (this.context && x.data.context === this.context) {
-        return true;
-      } else if (this.status && x.data.status === this.status) {
-        return true;
-      } else {
-        return false;
-      }
-
-    })
-    this.treeNodes = [...filteredNodes];
-  }
-
-  updateRows() {
+  createTree() {
     if (this.files.length) {
       const rootNode = this.fileService.convertFilestoNodes(
         this.files,
-        this.context
+        this.context,
+        this.status
       );
+
       this.treeNodes = [rootNode];
     } else {
       this.treeNodes = [];
     }
-    console.log(this.treeNodes);
   }
 
   nodeSelect(event: any) {
