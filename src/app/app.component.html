@@ -35,8 +35,11 @@
   draggableScope="self"
   droppableScope="self"
   selectionMode="checkbox"
+  styleClass="treeclass"
   [filter]="true"
   [contextMenu]="cm"
+  [validateDrop]="true"
+  (onNodeDrop)="nodeDrop($event)"
   (onNodeSelect)="nodeSelect($event)"
   (onNodeUnselect)="nodeUnselect($event)"
   [(selection)]="selectedFiles"
@@ -92,3 +95,12 @@
   <button class="expand-button" pButton (click)="expandToggle(false)">Collapse all<i class="pi pi-folder"></i></button>
 </div>
 <p-contextMenu #cm [model]="menuItems"></p-contextMenu>
+<p-dialog 
+  [(visible)]="addFolderDialogVisible" 
+  [modal]="true"
+  closeable="true"
+  (onHide)="addFolderHide()"
+  header="Add a folder">
+  <input type="text" placeholder="Folder name" [(ngModel)]="foldername" pInputText />
+  <button pButton (click)="addFolder()" [disabled]="foldername === ''">Add</button>
+</p-dialog>

@@ -47,6 +47,21 @@ export class MyTreeNode implements TreeNode<File> {
     }
   }
 
+  removeChild(childNode: MyTreeNode) {
+    // Remove Child must remove all of it's children
+    const childIndex = this.children.findIndex(x => x.label === childNode.label);
+    if (childIndex !== -1) {
+      const child = this.children[childIndex];
+      if (child.children) {
+        child.children.forEach(x => {
+          child.removeChild(x);
+        })
+      }
+      // TODO: get rid of the actual file
+      this.children.splice(childIndex);
+    } 
+  }
+
 }
 
 export class File {

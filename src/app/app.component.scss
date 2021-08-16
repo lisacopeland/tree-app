@@ -18,6 +18,12 @@
   color: #999;
 }
 
+/* ::ng-deep .treeclass.p-tree {
+  .p-treenode-content {
+    border: 1px solid blue;
+  }
+} */
+
 span.tag {
   display: inline-block;
   margin-left: 5px;
