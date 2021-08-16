@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MenuItem, TreeDragDropService, TreeNode } from 'primeng/api';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { MenuItem, MessageService, TreeDragDropService, TreeNode } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { FileService } from './file.service';
 import { MyTreeNode, File } from './files.api';
@@ -7,10 +7,10 @@ import { MyTreeNode, File } from './files.api';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  providers: [TreeDragDropService],
+  providers: [TreeDragDropService, MessageService],
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   title = 'tree-app';
   files: File[] = [];
   treeNodes: TreeNode[];
@@ -50,7 +50,8 @@ export class AppComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private fileService: FileService) {}
+  constructor(private fileService: FileService,
+              private messageService: MessageService) {}
 
   ngOnInit() {
     this.sub = this.fileService.getFiles().subscribe((files) => {
@@ -59,43 +60,77 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const inputField = document.querySelector('.p-inputtext');
+      if (inputField) {
+        inputField.setAttribute('placeholder', 'Filename');
+      }
+    });
+  }
+
   stubMethod(action: string) {
     console.log('these were selected for ' + action);
     this.selectedFiles.forEach((x) => {
-      console.log(x.label);
-      console.log('x is a leaf: ' + x.leaf);
+      console.log(x.label, 'leaf is ', x.leaf);
     });
-    const branches = this.selectedFiles.filter(x => !x.leaf);
-    const files = this.selectedFiles.filter(x => x.leaf);
+    let files = this.selectedFiles.filter(x => x.leaf);
     switch(action) {
       case 'addFolder':
         // Check that there is only one selection and it is a branch
-        if (branches.length > 1) {
-          console.log('there must be only one selection!');
+        if ((this.selectedFiles.length > 1) || (this.selectedFiles[0].leaf)) {
+          this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select only one branch to add a folder.'});
         } else {
-          this.parentBranch = branches[0] as MyTreeNode;
+          this.parentBranch = this.selectedFiles[0] as MyTreeNode;
           this.addFolderDialogVisible = true;
-
         }
         break;
       case 'download':
         // Get all of the files and download them, switch their status to downloaded
+        if (files.length < 1) {
+          this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select at least one file to download.'});
+        } else {
+          files.forEach(node => {
+            if (node.leaf) {
+              console.log('downloading ' + node.label);
+            }
+          });
+        }
         break;
       case 'archive':
-        // Get all of the files, switch their status to downloaded
+        // Get all of the files, switch their status to archived
+        if (files.length < 1) {
+          this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select at least one file to download.'});
+        } else {
+          files.forEach(node => {
+            if (node.leaf) {
+              console.log('Archiving ' + node.label);
+            }
+          });
+        }
         break;
       case 'delete':
         // Walk thru selectedFiles and delete everything
+        this.selectedFiles.forEach(node => {
+          const myParent = node.parent as MyTreeNode;
+          const mySelf = node as MyTreeNode;
+          myParent.removeChild(mySelf);
+        })
         break;
       case 'edit':
         // Check that there is only one selection and it is a leaf
-        if (files.length > 1) {
-          console.log('there must be only one selection!');
+        if (files.length !== 1) {
+          this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select one file at a time to edit.'});
         } else {
           console.log('editing this file!');
         }
         break;
     }
+    this.clearSelections();
+  }
+
+  clearSelections() {
+    this.selectedFiles = [];
   }
 
   addFolder() {
@@ -137,7 +172,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.context,
         this.status
       );
-
       this.treeNodes = [rootNode];
     } else {
       this.treeNodes = [];
@@ -159,7 +193,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!event.dropNode.leaf) {
       console.log('this was legal');
       event.accept();
-      // TODO: When a node is dropped, you need to update the folder property 
+      // TODO: When a node is dropped, you need to update the folder property
     } else {
       console.log('this was NOT legal');
     }

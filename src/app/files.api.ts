@@ -59,7 +59,7 @@ export class MyTreeNode implements TreeNode<File> {
       }
       // TODO: get rid of the actual file
       this.children.splice(childIndex);
-    } 
+    }
   }
 
 }

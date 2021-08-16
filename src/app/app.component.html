@@ -3,7 +3,7 @@
 
 <h5>Select one or more files and right-click to open the context menu</h5>
 <h5>
-  Enter a search value to filter by name, or click on the tags to filter by tag
+  Enter a search value to filter by filename, or click on the tags to filter by tag
 </h5>
 
 <button
@@ -37,6 +37,7 @@
   selectionMode="checkbox"
   styleClass="treeclass"
   [filter]="true"
+  filterMode="strict"
   [contextMenu]="cm"
   [validateDrop]="true"
   (onNodeDrop)="nodeDrop($event)"
@@ -94,9 +95,13 @@
   <button class="expand-button" pButton (click)="expandToggle(true)">Expand all<i class="pi pi-folder-open"></i></button>
   <button class="expand-button" pButton (click)="expandToggle(false)">Collapse all<i class="pi pi-folder"></i></button>
 </div>
+
+<!-- Context menu for tree items -->
 <p-contextMenu #cm [model]="menuItems"></p-contextMenu>
-<p-dialog 
-  [(visible)]="addFolderDialogVisible" 
+
+<!-- Dialog for adding a folder -->
+<p-dialog
+  [(visible)]="addFolderDialogVisible"
   [modal]="true"
   closeable="true"
   (onHide)="addFolderHide()"
@@ -104,3 +109,5 @@
   <input type="text" placeholder="Folder name" [(ngModel)]="foldername" pInputText />
   <button pButton (click)="addFolder()" [disabled]="foldername === ''">Add</button>
 </p-dialog>
+
+<p-toast></p-toast>
