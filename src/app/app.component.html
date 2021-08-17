@@ -3,9 +3,11 @@
 
 <h5>Select one or more files and right-click to open the context menu</h5>
 <h5>
-  Enter a search value to filter by filename, or click on the tags to filter by tag
+  Enter a search value to filter by filename, or click on the tags to filter by
+  tag
 </h5>
 
+<!-- If filtering by context or status, these buttons will be present -->
 <button
   class="context"
   [ngClass]="context"
@@ -65,14 +67,13 @@
       <p>{{ node.label }}</p>
       <div class="details">
         <p>{{ node.data.created_at }}</p>
-<!--         <span *ngIf="node.data.status === 'new'"
-          class="tag new">New</span> -->
-        <span *ngIf="node.data.admin_status" class="tag status"
-            [ngClass]="node.data.admin_status"
-            (click)="filterStatus(node.data.admin_status)"
-            >{{
-            node.data.admin_status
-          }}</span>
+        <span
+          *ngIf="node.data.admin_status"
+          class="tag status"
+          [ngClass]="node.data.admin_status"
+          (click)="filterStatus(node.data.admin_status)"
+          >{{ node.data.admin_status }}</span
+        >
         <span *ngIf="node.data.label" class="tag label">{{
           node.data.label
         }}</span>
@@ -92,8 +93,12 @@
   </ng-template>
 </p-tree>
 <div button-row>
-  <button class="expand-button" pButton (click)="expandToggle(true)">Expand all<i class="pi pi-folder-open"></i></button>
-  <button class="expand-button" pButton (click)="expandToggle(false)">Collapse all<i class="pi pi-folder"></i></button>
+  <button class="expand-button" pButton (click)="expandToggle(true)">
+    Expand all<i class="pi pi-folder-open"></i>
+  </button>
+  <button class="expand-button" pButton (click)="expandToggle(false)">
+    Collapse all<i class="pi pi-folder"></i>
+  </button>
 </div>
 
 <!-- Context menu for tree items -->
@@ -105,9 +110,17 @@
   [modal]="true"
   closeable="true"
   (onHide)="addFolderHide()"
-  header="Add a folder">
-  <input type="text" placeholder="Folder name" [(ngModel)]="foldername" pInputText />
-  <button pButton (click)="addFolder()" [disabled]="foldername === ''">Add</button>
+  header="Add a folder"
+>
+  <input
+    type="text"
+    placeholder="Folder name"
+    [(ngModel)]="foldername"
+    pInputText
+  />
+  <button pButton (click)="addFolder()" [disabled]="foldername === ''">
+    Add
+  </button>
 </p-dialog>
 
 <p-toast></p-toast>

@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { TreeModule} from 'primeng/tree';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { DialogModule } from 'primeng/dialog';
-import {ToastModule} from 'primeng/toast';
+import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({

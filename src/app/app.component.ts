@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MenuItem, MessageService, TreeDragDropService, TreeNode } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { FileService } from './file.service';
@@ -11,11 +11,10 @@ import { MyTreeNode, File } from './files.api';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
-  title = 'tree-app';
+
   files: File[] = [];
   treeNodes: TreeNode[];
   parentBranch: MyTreeNode;
-  unFilteredNodes: TreeNode[];
   selectedFiles: TreeNode[];
   foldername = '';
   sub: Subscription;
@@ -70,10 +69,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   stubMethod(action: string) {
-    console.log('these were selected for ' + action);
-    this.selectedFiles.forEach((x) => {
-      console.log(x.label, 'leaf is ', x.leaf);
-    });
     let files = this.selectedFiles.filter(x => x.leaf);
     switch(action) {
       case 'addFolder':
@@ -100,7 +95,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'archive':
         // Get all of the files, switch their status to archived
         if (files.length < 1) {
-          this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select at least one file to download.'});
+          this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select at least one file to archive.'});
         } else {
           files.forEach(node => {
             if (node.leaf) {
@@ -122,10 +117,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         if (files.length !== 1) {
           this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select one file at a time to edit.'});
         } else {
-          console.log('editing this file!');
           const file = this.fileService.getFileFromNode(files[0] as MyTreeNode, this.files);
           // Now edit the file
-
         }
         break;
     }
@@ -138,7 +131,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   addFolder() {
     this.addFolderDialogVisible = false;
-    console.log('adding to this branch!');
     this.parentBranch.getOrCreateBranch(this.foldername, this.parentBranch.path);
   }
 
@@ -170,7 +162,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createTree() {
     if (this.files.length) {
-      console.log('files at start:', this.files);
       const rootNode = this.fileService.convertFilestoNodes(
         this.files,
         this.context,
@@ -193,14 +184,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   nodeDrop(event: any) {
-    console.log('a node was droppped!', event);
     if (!event.dropNode.leaf) {
-      console.log('this was legal');
       event.accept();
       this.updateAllPaths();
-      // TODO: When a node is dropped, you need to update the folder property
     } else {
-      console.log('this was NOT legal');
+      this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select a folder to drop your selection in.'});
     }
   }
 
@@ -208,27 +196,21 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     // After a node is dropped, update the paths of the files
     // walk thru the tree and update data.folder for each item
     // At the same time, update the "path"
-
     this.treeNodes.forEach((node) => {
       const myTreeNode = node as MyTreeNode;
       const currentPath = myTreeNode.label + '/';
-      console.log('updateAllPaths in forLoop: node + ' + currentPath);
-      if (myTreeNode.children) {
+       if (myTreeNode.children) {
         myTreeNode.children.forEach((childNode) => {
-          console.log('updateAllPaths: looping on children: ' + childNode.label);
           this.updatePath(childNode, currentPath);
         });
       }
     });
-    console.log('files now ', this.files)
   }
 
   updatePath(node: MyTreeNode, currentPath: string) {
-    console.log('updatePath: node ' + node.label + ' currentPath is ' + currentPath);
     if (node.leaf) {
       node.path = currentPath;
       if (node.data) {
-        console.log('this is a leaf! filename - ' + node.data.name + ' setting path to ' + currentPath);
         // Todo: you also have to update the actual data
         node.data.folder = currentPath;
         const file = this.fileService.getFileFromNode(node, this.files)
@@ -238,16 +220,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     } else {
-      console.log('this is not a leaf! ');
       if (node.children) {
         node.children.forEach(child => {
-          console.log('updatePath: recursing on node ' + child.label);
           this.updatePath(child, currentPath + node.label + '/')
         })
       }
     }
   }
-
 
   expandToggle(expand: boolean) {
     // If expand is true, expand all, if false, collapse all

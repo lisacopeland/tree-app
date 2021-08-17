@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
-import { TreeNode } from 'primeng/api';
 import { Observable, of } from 'rxjs';
 import { File, MyTreeNode } from './files.api';
 
@@ -103,10 +101,10 @@ export class FileService {
     return of(this.files);
   }
 
-  convertFilestoNodes(roughfiles: File[], contextFilter = '', statusFilter = ''): MyTreeNode {
+  convertFilestoNodes(rawFiles: File[], contextFilter = '', statusFilter = ''): MyTreeNode {
     // toplevel is 'account/'
     // a whole folder will look like 'account/level/sublevel'
-    const files = roughfiles.filter((file) => {
+    const files = rawFiles.filter((file) => {
       if (contextFilter && file.context !== contextFilter) {
         return false;
       } else if (statusFilter && file.admin_status !== statusFilter)
@@ -139,4 +137,5 @@ export class FileService {
     const id = myTreeNode.data.id;
     return files.find(x => x.id === id);
   }
+
 }
