@@ -28,6 +28,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       command: (event) => this.stubMethod('addFolder'),
     },
     {
+      label: 'Upload File',
+      icon: 'pi pi-folder-open',
+      command: (event) => this.stubMethod('uploadFile'),
+    },
+    {
       label: 'Download',
       icon: 'pi pi-download',
       command: (event) => this.stubMethod('download'),
@@ -78,6 +83,15 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.parentBranch = this.selectedFiles[0] as MyTreeNode;
           this.addFolderDialogVisible = true;
+        }
+        break;
+      case 'uploadFile':
+        // Check that there is only one selection and it is a branch
+        if ((this.selectedFiles.length > 1) || (this.selectedFiles[0].leaf)) {
+          this.messageService.add({ severity: 'warn', summary: 'Info', detail: 'Select a folder to add files to.' });
+        } else {
+          this.parentBranch = this.selectedFiles[0] as MyTreeNode;
+          // Now display filepicker and then upload file
         }
         break;
       case 'download':

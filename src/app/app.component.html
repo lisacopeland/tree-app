@@ -7,6 +7,15 @@
   tag
 </h5>
 
+<div button-row>
+  <button class="expand-button" pButton (click)="expandToggle(true)">
+    Expand all<i class="pi pi-folder-open"></i>
+  </button>
+  <button class="expand-button" pButton (click)="expandToggle(false)">
+    Collapse all<i class="pi pi-folder"></i>
+  </button>
+</div>
+
 <!-- If filtering by context or status, these buttons will be present -->
 <button
   class="context"
@@ -92,25 +101,18 @@
     <p class="branch">{{ node.label }}</p>
   </ng-template>
 </p-tree>
-<div button-row>
-  <button class="expand-button" pButton (click)="expandToggle(true)">
-    Expand all<i class="pi pi-folder-open"></i>
-  </button>
-  <button class="expand-button" pButton (click)="expandToggle(false)">
-    Collapse all<i class="pi pi-folder"></i>
-  </button>
-</div>
 
 <!-- Context menu for tree items -->
 <p-contextMenu #cm [model]="menuItems"></p-contextMenu>
 
 <!-- Dialog for adding a folder -->
+<!-- TODO: Add the branch name that you are adding to -->
 <p-dialog
   [(visible)]="addFolderDialogVisible"
   [modal]="true"
   closeable="true"
   (onHide)="addFolderHide()"
-  header="Add a folder"
+  header="Add a folder "
 >
   <input
     type="text"
