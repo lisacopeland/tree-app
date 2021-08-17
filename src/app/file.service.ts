@@ -54,7 +54,7 @@ export class FileService {
     },
     {
       ver: 3,
-      id: 1,
+      id: 3,
       updated_at: "2021-08-12T16:53:40.936Z",
       created_at: "2021-08-12T16:52:52.682Z",
       account_id: "dev",
@@ -75,7 +75,7 @@ export class FileService {
     },
     {
       ver: 2,
-      id: 2,
+      id: 4,
       updated_at: "2021-08-12T20:14:47.238Z",
       created_at: "2021-08-12T20:14:47.221Z",
       account_id: "dev",
@@ -132,34 +132,11 @@ export class FileService {
     return root;
   }
 
-/*   convertMyNodes(myNodes: MyTreeNode[]): TreeNode[] {
-    const retNodes: TreeNode[] = [];
-    myNodes.forEach(myNode => {
-      retNodes.push({
-        label: myNode.label,
-        data: this.convertData(myNode.data),
-        type: (myNode.leaf) ? "file" : "",
-        children: this.convertMyNodes(myNode.children)
-      })
-    })
-    return retNodes;
-  }
-
-  convertData(file:File | undefined) {
-    if (file !== undefined) {
-      return {
-        id: file.id,
-        name: file.name,
-        progress: 0,
-        status: file.admin_status,
-        label: file.label,
-        context: file.context,
-        date: moment(file.created_at).format('MM/DD hh:mm a'),
-        public: file.is_public,
-        file,
-      }
-    } else {
-      return undefined
+  getFileFromNode(myTreeNode: MyTreeNode, files: File[]) {
+    if (!myTreeNode.data) {
+      return undefined;
     }
-  } */
+    const id = myTreeNode.data.id;
+    return files.find(x => x.id === id);
+  }
 }

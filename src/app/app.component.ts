@@ -123,6 +123,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({severity:'warn', summary: 'Info', detail: 'Select one file at a time to edit.'});
         } else {
           console.log('editing this file!');
+          const file = this.fileService.getFileFromNode(files[0] as MyTreeNode, this.files);
+          // Now edit the file
+
         }
         break;
     }
@@ -167,6 +170,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createTree() {
     if (this.files.length) {
+      console.log('files at start:', this.files);
       const rootNode = this.fileService.convertFilestoNodes(
         this.files,
         this.context,
@@ -193,15 +197,57 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!event.dropNode.leaf) {
       console.log('this was legal');
       event.accept();
+      this.updateAllPaths();
       // TODO: When a node is dropped, you need to update the folder property
     } else {
       console.log('this was NOT legal');
     }
   }
 
-  updatePaths() {
+  updateAllPaths() {
+    // After a node is dropped, update the paths of the files
+    // walk thru the tree and update data.folder for each item
+    // At the same time, update the "path"
 
+    this.treeNodes.forEach((node) => {
+      const myTreeNode = node as MyTreeNode;
+      const currentPath = myTreeNode.label + '/';
+      console.log('updateAllPaths in forLoop: node + ' + currentPath);
+      if (myTreeNode.children) {
+        myTreeNode.children.forEach((childNode) => {
+          console.log('updateAllPaths: looping on children: ' + childNode.label);
+          this.updatePath(childNode, currentPath);
+        });
+      }
+    });
+    console.log('files now ', this.files)
   }
+
+  updatePath(node: MyTreeNode, currentPath: string) {
+    console.log('updatePath: node ' + node.label + ' currentPath is ' + currentPath);
+    if (node.leaf) {
+      node.path = currentPath;
+      if (node.data) {
+        console.log('this is a leaf! filename - ' + node.data.name + ' setting path to ' + currentPath);
+        // Todo: you also have to update the actual data
+        node.data.folder = currentPath;
+        const file = this.fileService.getFileFromNode(node, this.files)
+        if (file) {
+          file.folder = currentPath;
+          // now save it
+        }
+      }
+    } else {
+      console.log('this is not a leaf! ');
+      if (node.children) {
+        node.children.forEach(child => {
+          console.log('updatePath: recursing on node ' + child.label);
+          this.updatePath(child, currentPath + node.label + '/')
+        })
+      }
+    }
+  }
+
 
   expandToggle(expand: boolean) {
     // If expand is true, expand all, if false, collapse all

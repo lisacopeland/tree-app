@@ -47,6 +47,13 @@ export class MyTreeNode implements TreeNode<File> {
     }
   }
 
+  updateDataFromFile(data: File) {
+    // Ensure that you are only updating data which exists
+    if (this.data !== undefined) {
+      this.data = data
+    }
+  }
+
   removeChild(childNode: MyTreeNode) {
     // Remove Child must remove all of it's children
     const childIndex = this.children.findIndex(x => x.label === childNode.label);
